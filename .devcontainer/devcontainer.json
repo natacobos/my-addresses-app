@@ -1,0 +1,18 @@
+{
+  "name": "My addresses challenge",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" }
+  },
+  "forwardPorts": [5080, 5173],
+  "portsAttributes": {
+    "5080": { "label": "API" },
+    "5173": { "label": "Page", "onAutoForward": "openPreview" }
+  },
+  "postCreateCommand": "dotnet restore api.tests && cd web && npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-dotnettools.csdevkit"]
+    }
+  }
+}
