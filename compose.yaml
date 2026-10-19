@@ -1,0 +1,49 @@
+# Runs the API and the page without installing .NET or Node: docker compose up
+# Edit the files locally; both services reload on save.
+services:
+  api:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    working_dir: /src/api
+    command: dotnet watch run --non-interactive
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+    ports:
+      - "5080:5080"
+    volumes:
+      - .:/src
+      - api-bin:/src/api/bin
+      - api-obj:/src/api/obj
+
+  web:
+    image: node:22-slim
+    working_dir: /src/web
+    command: sh -c "npm install && npm run dev"
+    environment:
+      API_URL: http://api:5080
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/src
+      - web-node-modules:/src/web/node_modules
+    depends_on:
+      - api
+
+  tests:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    working_dir: /src
+    command: dotnet test api.tests
+    profiles: ["tests"]
+    volumes:
+      - .:/src
+      - api-bin:/src/api/bin
+      - api-obj:/src/api/obj
+      - tests-bin:/src/api.tests/bin
+      - tests-obj:/src/api.tests/obj
+
+volumes:
+  api-bin:
+  api-obj:
+  web-node-modules:
+  tests-bin:
+  tests-obj:

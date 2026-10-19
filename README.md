@@ -38,14 +38,23 @@ A signed-in customer manages the shipping addresses saved in their account. In t
 
 ## Running the project
 
-The Codespace installs everything when it starts. Then, in two terminals:
+**With Docker (recommended).** You only need Docker Desktop. Clone the repository and run, from its folder:
+
+```bash
+docker compose up                          # API on http://localhost:5080, page on http://localhost:5173
+docker compose --profile tests run --rm tests   # run the tests
+```
+
+Edit the files in your usual editor; the API and the page reload when you save. The first start downloads the .NET and Node images, which takes a few minutes.
+
+**Without Docker.** With .NET 8 and Node 22 installed, in two terminals:
 
 ```bash
 cd api && dotnet run          # API on http://localhost:5080
-cd web && npm run dev         # page on http://localhost:5173
+cd web && npm install && npm run dev   # page on http://localhost:5173
 ```
 
-Tests: `dotnet test api.tests`
+Tests: `dotnet test api.tests`. The repository also works in a GitHub Codespace (Code → Codespaces), which installs everything on its own.
 
 ## Files
 
@@ -54,5 +63,6 @@ Tests: `dotnet test api.tests`
 - `api/Auth/DemoAuthHandler.cs`: signs every request in as a customer (customer 1 unless the `X-Customer-Id` header says otherwise). It stands in for real authentication.
 - `api.tests/AddressesApiTests.cs`: the existing tests.
 - `web/src/AddressList.tsx`: the page.
+- `compose.yaml`: runs the API, the page and the tests in Docker.
 
 Think out loud as you work. We are interested in how you reason, not only in the final code.
